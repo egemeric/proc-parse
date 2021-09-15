@@ -1,3 +1,3 @@
-module Daemon
+module proc-parse
 
 go 1.17
