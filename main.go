@@ -4,6 +4,9 @@ import (
 	"log"
 	"net/http"
 	controller "proc-parse/Controller"
+	"reflect"
+	"runtime"
+	"strings"
 )
 
 type EndPoints struct {
@@ -22,11 +25,18 @@ func Middleware(next http.Handler) http.Handler {
 var Urls []EndPoints
 
 func init() {
-	Urls = make([]EndPoints, 2)
+	Urls = make([]EndPoints, 3)
 	Urls[0] = EndPoints{Url: "/api/meminfo", Fun: controller.ReadMemInfo}
 	Urls[1] = EndPoints{Url: "/api/cpuinfo", Fun: controller.ReadCpuInfo}
+	Urls[2] = EndPoints{Url: "/api", Fun: GetAllEndpoints}
 }
-
+func GetAllEndpoints(w http.ResponseWriter, r *http.Request) {
+	specs := make(map[string][]string)
+	for _, Url := range Urls {
+		specs[runtime.FuncForPC(reflect.ValueOf(Url.Fun).Pointer()).Name()] = strings.Split(Url.Url, " ")
+	}
+	w.Write(controller.ConvertToJson(specs))
+}
 func main() {
 	mux := http.NewServeMux()
 	for _, url := range Urls {
