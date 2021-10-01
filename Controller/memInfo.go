@@ -23,5 +23,6 @@ func ReadMemInfo(w http.ResponseWriter, r *http.Request) {
 		key := strings.TrimSpace(tmp[0])
 		meminfo[key] = splited[1][:]
 	}
-	w.Write(ConvertToJson(meminfo))
+	data := JsonMapString{meminfo}
+	w.Write(data.ConvertToJson())
 }

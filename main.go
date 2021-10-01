@@ -35,7 +35,8 @@ func GetAllEndpoints(w http.ResponseWriter, r *http.Request) {
 	for _, Url := range Urls {
 		specs[runtime.FuncForPC(reflect.ValueOf(Url.Fun).Pointer()).Name()] = strings.Split(Url.Url, " ")
 	}
-	w.Write(controller.ConvertToJson(specs))
+	data := controller.JsonMapString{Data: specs}
+	w.Write(data.ConvertToJson())
 }
 func main() {
 	mux := http.NewServeMux()

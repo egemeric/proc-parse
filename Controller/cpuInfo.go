@@ -23,7 +23,8 @@ func ReadCpuInfo(w http.ResponseWriter, r *http.Request) {
 			specs[key] = splited[1][1:]
 
 		}
-		CpuInfo = ConvertToJson(specs)
+		data := JsonMapString{specs}
+		CpuInfo = data.ConvertToJson()
 		w.Write(CpuInfo)
 	} else {
 		w.Write(CpuInfo)
